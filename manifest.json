@@ -1,0 +1,13 @@
+{
+  "name": "Efeito Persona",
+  "version": "1.0.0",
+  "manifest_version": 1,
+  "author": "Nicolas",
+  "icon": "https://www.owlbear.rodeo",
+  "action": {
+    "title": "Persona FX",
+    "view": "/index.html",
+    "width": 300,
+    "height": 150
+  }
+}
