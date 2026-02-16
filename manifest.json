@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "manifest_version": 1,
   "author": "Nicolas",
-  "icon": "https://www.owlbear.rodeo",
+  "icon": "https://www.owlbear.rodeo/favicon.ico",
   "action": {
     "title": "Persona FX",
-    "view": "/index.html",
+    "view": "index.html",
     "width": 300,
-    "height": 150
+    "height": 200
   }
 }
