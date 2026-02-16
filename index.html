@@ -1,69 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
     <script src="https://unpkg.com/@owlbear-rodeo/sdk@latest/dist/index.js"></script>
 </head>
-<body style="background: #242424; color: white; font-family: sans-serif; text-align: center; padding: 20px; overflow: hidden;">
-    <h3 style="color: #bb86fc;">🎭 Persona FX Ativo</h3>
-    <p style="font-size: 14px;">Tokens na camada CHARACTER agora respiram e inclinam ao mover.</p>
-
+<body style="background: #222; color: white; text-align: center;">
+    <h4>Persona FX Ativo</h4>
     <script>
         const OBR = window.OBR;
-        let posicoesAnteriores = {};
-
-        OBR.onReady(() => {
-            console.log("Extensão Persona iniciada com sucesso!");
-
-            // --- 1. LÓGICA DE MOVIMENTO (TILT/INCLINAÇÃO) ---
-            OBR.scene.items.onChange(async (items) => {
-                const characters = items.filter(i => i.layer === "CHARACTER");
-                const updates = [];
-
-                for (const item of characters) {
-                    const posAntiga = posicoesAnteriores[item.id];
-                    
-                    if (posAntiga && (posAntiga.x !== item.position.x || posAntiga.y !== item.position.y)) {
-                        const direcao = item.position.x > posAntiga.x ? 1 : -1;
-                        const anguloAlvo = direcao * 10; // 10 graus é um inclinar elegante
-
-                        if (item.rotation !== anguloAlvo) {
-                            updates.push({ id: item.id, rotation: anguloAlvo });
-                        }
-                    }
-                    posicoesAnteriores[item.id] = { x: item.position.x, y: item.position.y };
-                }
-
-                if (updates.length > 0) {
-                    await OBR.scene.items.updateItems(updates.map(u => u.id), (items) => {
-                        for (let i of items) {
-                            const up = updates.find(u => u.id === i.id);
-                            i.rotation = up.rotation;
-                        }
-                    });
-
-                    // Volta ao normal
-                    setTimeout(async () => {
-                        await OBR.scene.items.updateItems(updates.map(u => u.id), (items) => {
-                            for (let i of items) i.rotation = 0;
-                        });
-                    }, 400);
-                }
-            });
-
-            // --- 2. LÓGICA DE RESPIRAÇÃO ---
+        OBR.onReady(async () => {
             setInterval(async () => {
-                const items = await OBR.scene.items.getItems(i => i.layer === "CHARACTER");
-                if (items.length === 0) return;
-
-                await OBR.scene.items.updateItems(items.map(i => i.id), (tokens) => {
-                    for (let token of tokens) {
-                        // Se estiver no tamanho normal, aumenta um pouco. Se já estiver grande, volta ao normal.
-                        const novaEscala = token.scale.x === 1 ? 1.03 : 1;
-                        token.scale = { x: novaEscala, y: novaEscala };
+                const items = await OBR.scene.items.getItems((i) => i.layer === "CHARACTER");
+                await OBR.scene.items.updateItems(items, (tokens) => {
+                    for (let t of tokens) {
+                        // Faz o token piscar levemente para testar
+                        t.visible = !t.visible;
                     }
                 });
-            }, 2500); 
+            }, 1000); // Pisca a cada 1 segundo
         });
     </script>
 </body>
