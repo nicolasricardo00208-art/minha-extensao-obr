@@ -2,8 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <!-- CORREÇÃO: Link completo do SDK do Owlbear -->
-    <script src="https://unpkg.com"></script>
+    <script src="https://unpkg.com/@owlbear-rodeo/sdk@latest/dist/index.js"></script>
 </head>
 <body style="background: #242424; color: white; font-family: sans-serif; text-align: center; padding: 20px; overflow: hidden;">
     <h3 style="color: #bb86fc;">🎭 Persona FX Ativo</h3>
@@ -16,7 +15,7 @@
         OBR.onReady(() => {
             console.log("Extensão Persona iniciada com sucesso!");
 
-            // --- 1. LÓGICA DE MOVIMENTO (TILT) ---
+            // --- 1. LÓGICA DE MOVIMENTO (TILT/INCLINAÇÃO) ---
             OBR.scene.items.onChange(async (items) => {
                 const characters = items.filter(i => i.layer === "CHARACTER");
                 const updates = [];
@@ -24,17 +23,14 @@
                 for (const item of characters) {
                     const posAntiga = posicoesAnteriores[item.id];
                     
-                    // Se a posição mudou no eixo X ou Y
                     if (posAntiga && (posAntiga.x !== item.position.x || posAntiga.y !== item.position.y)) {
                         const direcao = item.position.x > posAntiga.x ? 1 : -1;
-                        const anguloAlvo = direcao * 15;
+                        const anguloAlvo = direcao * 10; // 10 graus é um inclinar elegante
 
-                        // Só atualiza se o ângulo for diferente (evita loops infinitos)
                         if (item.rotation !== anguloAlvo) {
                             updates.push({ id: item.id, rotation: anguloAlvo });
                         }
                     }
-                    // Salva a posição atual para a próxima comparação
                     posicoesAnteriores[item.id] = { x: item.position.x, y: item.position.y };
                 }
 
@@ -46,7 +42,7 @@
                         }
                     });
 
-                    // Efeito Mola: Volta ao zero após 400ms
+                    // Volta ao normal
                     setTimeout(async () => {
                         await OBR.scene.items.updateItems(updates.map(u => u.id), (items) => {
                             for (let i of items) i.rotation = 0;
@@ -55,19 +51,19 @@
                 }
             });
 
-            // --- 2. LÓGICA DE RESPIRAÇÃO (LOOP) ---
+            // --- 2. LÓGICA DE RESPIRAÇÃO ---
             setInterval(async () => {
                 const items = await OBR.scene.items.getItems(i => i.layer === "CHARACTER");
                 if (items.length === 0) return;
 
                 await OBR.scene.items.updateItems(items.map(i => i.id), (tokens) => {
                     for (let token of tokens) {
-                        // Alterna entre 1.0 e 1.03 (Efeito Persona sutil)
+                        // Se estiver no tamanho normal, aumenta um pouco. Se já estiver grande, volta ao normal.
                         const novaEscala = token.scale.x === 1 ? 1.03 : 1;
                         token.scale = { x: novaEscala, y: novaEscala };
                     }
                 });
-            }, 2500); // 2.5 segundos para ser leve na rede
+            }, 2500); 
         });
     </script>
 </body>
