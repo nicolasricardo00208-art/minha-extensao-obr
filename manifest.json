@@ -6,8 +6,8 @@
   "icon": "https://www.owlbear.rodeo/favicon.ico",
   "action": {
     "title": "Persona FX",
-    "view": "index.html",
     "icon": "https://www.owlbear.rodeo/favicon.ico",
+    "popover": "index.html",
     "width": 300,
     "height": 200
   }
