@@ -1,1 +1,15 @@
+{
+  "name": "Persona FX",
+  "version": "1.0.0",
+  "manifest_version": 1,
+  "author": "Nicolau",
+  "icon": "https://www.owlbear.rodeo/favicon.ico",
+  "action": {
+    "title": "Persona FX",
+    "icon": "https://www.owlbear.rodeo/favicon.ico",
+    "popover": "index.html",
+    "width": 300,
+    "height": 200
+  }
+}
 
